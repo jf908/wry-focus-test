@@ -78,6 +78,7 @@ fn main() -> wry::Result<()> {
         .with_visible(false)
         .with_focused(false)
         .with_ipc_handler(move |_| {
+            println!("Webview Space Event");
             rwh.store(true, Ordering::Relaxed);
         })
         .build()?;
@@ -127,8 +128,10 @@ fn main() -> wry::Result<()> {
                     event: WindowEvent::KeyboardInput { event, .. },
                     ..
                 } => {
-                    println!("{:?}", event);
-                    if event.physical_key == PhysicalKey::Code(KeyCode::Space) {
+                    if event.state.is_pressed()
+                        && event.physical_key == PhysicalKey::Code(KeyCode::Space)
+                    {
+                        println!("Winit Space Event");
                         webview.set_visible(true).unwrap();
                         webview.focus().unwrap();
                     }
